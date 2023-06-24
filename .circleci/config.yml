@@ -1,0 +1,40 @@
+# See: https://circleci.com/docs/configuration-reference
+version: 2.1
+
+orbs:
+  # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
+  node: circleci/node@4.7
+
+jobs:
+  eslint:
+    # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Run ESLint
+          command: npx eslint .
+
+  build-and-test:
+    # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Run tests
+          command: npm test
+
+workflows:
+  # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/configuration-reference/#workflows
+  build:
+    jobs:
+      - eslint
+      - build-and-test:
+          requires: 
+            - eslint
