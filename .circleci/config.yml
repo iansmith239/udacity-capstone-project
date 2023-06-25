@@ -3,10 +3,12 @@ version: 2.1
 
 orbs:
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
-  node: circleci/node@4.7
+  node: circleci/node@5.1.0
+  docker: circleci/docker@2.2.0
+  aws-ecr: circleci/aws-ecr@8.2.1
 
 jobs:
-  eslint:
+  lint-app:
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
     docker:
       - image: cimg/node:16.10
@@ -18,8 +20,17 @@ jobs:
           name: Run ESLint
           command: npx eslint .
 
-  build-and-test:
+  lint-image:
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - docker/dockerlint:
+          dockerfile: Dockerfile
+          treat-warnings-as-errors: true
+
+  build-app:
     docker:
       - image: cimg/node:16.10
     steps:
@@ -27,14 +38,30 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-          name: Run tests
-          command: npm test
+          name: Build
+          command: npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build
 
 workflows:
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/configuration-reference/#workflows
   build:
     jobs:
-      - eslint
-      - build-and-test:
-          requires: 
-            - eslint
+      - lint-app
+      - lint-image
+      - node/run:
+          name: test-app
+          requires: [lint-app, lint-image]
+          npm-run: test
+      - build-app:
+          requires:
+            - test-app
+      - aws-ecr/build-and-push-image:
+          name: build-and-push-image
+          requires:
+            - build-app
+          attach-workspace: true
+          repo: udacity-capstone
+      
