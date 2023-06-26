@@ -1,6 +1,6 @@
 # Udacity Cloud DevOps Engineer Nanodegree Capstone Project
 
-A nice looking web application that provides a link to the Udacity website for visitors. It's purpose is to run as apart of a CI/CD pipeline as a demonstration of what I've learned in the Udacity Nanodegree program.
+A web application that provides a link to the Udacity website for visitors. It's an example of a CI/CD pipeline to demonstrate what I've learned in my Udacity nanodegree program.
 
 ## NPM Scripts
 
@@ -41,8 +41,8 @@ The cluster consists of two t2.micro (free tier) EC2 instances
 ### `kubectl create -f .kubectl-loadbalancer.yml`
 Create a load balancer for the pod
 
-### `kubectl get nodes,pods,services`
-Verify the nodes, pods, and load balancer are running\
-Get the public URL for the pod hosting this application
+### `kubectl get nodes,services`
+Verify the nodes and load balancer are running\
+Get the public URL for this application
 
 
