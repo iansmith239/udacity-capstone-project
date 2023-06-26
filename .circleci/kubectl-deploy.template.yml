@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: udacity-capstone-container
-        image: 884543467033.dkr.ecr.us-east-1.amazonaws.com/udacity-capstone:latest
+        image: 884543467033.dkr.ecr.us-east-1.amazonaws.com/udacity-capstone:REPLACE_WITH_CI_WORKFLOW_ID
         ports:
         - containerPort: 80
         imagePullPolicy: "Always"
