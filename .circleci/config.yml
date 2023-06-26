@@ -89,7 +89,7 @@ jobs:
 
 workflows:
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/configuration-reference/#workflows
-  my-workflow:
+  udacity-capstone-workflow:
     jobs:
       - lint-app
       - lint-dockerfile
