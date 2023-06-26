@@ -20,7 +20,7 @@ jobs:
           name: Run ESLint
           command: npx eslint .
 
-  lint-image:
+  lint-dockerfile:
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
     docker:
       - image: cimg/node:16.10
@@ -50,24 +50,44 @@ jobs:
           paths:
             - build
 
+  setup-deployment:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Create deploy config
+          command: |
+            cp .circleci/kubectl-deploy.template.yml deployment.yml
+            sed -ie "s/REPLACE_WITH_CI_WORKFLOW_ID/${CIRCLE_WORKFLOW_ID:0:7}/g" deployment.yml
+            cat deployment.yml
+      - persist_to_workspace:
+          root: .
+          paths:
+            - deployment.yml
+
 
 workflows:
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/configuration-reference/#workflows
   build:
     jobs:
       - lint-app
-      - lint-image
+      - lint-dockerfile
       - node/run:
           name: test-app
-          requires: [lint-app, lint-image]
+          requires: [lint-app, lint-dockerfile]
           npm-run: test
       - build-app:
-          requires:
-            - test-app
+          requires: [test-app]
       - aws-ecr/build-and-push-image:
           name: build-and-push-image
           requires:
             - build-app
           attach-workspace: true
           repo: udacity-capstone
+          tag: ${CIRCLE_WORKFLOW_ID:0:7}
+      - setup-deployment:
+          requires: [test-app]
       

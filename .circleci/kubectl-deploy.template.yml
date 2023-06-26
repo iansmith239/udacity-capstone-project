@@ -19,3 +19,7 @@ spec:
         image: 884543467033.dkr.ecr.us-east-1.amazonaws.com/udacity-capstone:latest
         ports:
         - containerPort: 80
+        imagePullPolicy: "Always"
+        env:
+          - name: CI_WORKFLOW_ID
+            value: REPLACE_WITH_CI_WORKFLOW_ID
