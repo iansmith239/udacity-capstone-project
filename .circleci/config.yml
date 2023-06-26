@@ -45,8 +45,8 @@ jobs:
       - run:
           name: Add version file
           command: |
-            touch build/version
-            echo ${CIRCLE_WORKFLOW_ID:0:7} > build/version
+            touch build/version.html
+            echo "Build Workflow: ${CIRCLE_WORKFLOW_ID:0:7}; Build Date: $(date)" > build/version.html
       - persist_to_workspace:
           root: .
           paths:

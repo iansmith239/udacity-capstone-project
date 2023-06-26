@@ -38,9 +38,6 @@ Run hadolint against the Dockerfile
 Create the Kubernetes cluster in AWS using CloudFormation\
 The cluster consists of two t2.micro (free tier) EC2 instances
 
-### `kubectl create -f .kubectl-createpod.yml`
-Create a pod for this app
-
 ### `kubectl create -f .kubectl-loadbalancer.yml`
 Create a load balancer for the pod
 
