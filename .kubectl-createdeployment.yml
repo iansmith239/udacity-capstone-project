@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-pod
+  labels:
+    tag:  my-pod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tag:  my-pod
+  template:
+    metadata:
+      labels:
+        tag:  my-pod
+    spec:
+      containers:
+      - name: udacity-capstone-container
+        image: 884543467033.dkr.ecr.us-east-1.amazonaws.com/udacity-capstone:latest
+        ports:
+        - containerPort: 80
