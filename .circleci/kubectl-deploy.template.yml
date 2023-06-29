@@ -5,7 +5,7 @@ metadata:
   labels:
     tag:  my-pod
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       tag:  my-pod
